@@ -1,4 +1,11 @@
 import joblib
+import numpy as np
+def softmax(x):
+    """Compute the softmax of vector x."""
+    exp_x = np.exp(x)
+    softmax_x = exp_x / np.sum(exp_x)
+    return softmax_x 
+
 def emo_trans_prob(emo_dict):
     # only estimate anger, happiness, neutral, sadness
     total_transit = 0
@@ -85,11 +92,39 @@ def emo_trans_prob(emo_dict):
         total_transit += 1
     
     total_transit -= 1
-    return {'a2a':ang2ang/total_transit, 'a2h':ang2hap/total_transit, 'a2n':ang2neu/total_transit, 'a2s':ang2sad/total_transit, \
-                    'h2a':hap2ang/total_transit, 'h2h':hap2hap/total_transit, 'h2n':hap2neu/total_transit, 'h2s':hap2sad/total_transit, \
-                    'n2a':neu2ang/total_transit, 'n2h':neu2hap/total_transit, 'n2n':neu2neu/total_transit, 'n2s':neu2sad/total_transit, \
-                    's2a':sad2ang/total_transit, 's2h':sad2hap/total_transit, 's2n':sad2neu/total_transit, 's2s':sad2sad/total_transit}
+    a = softmax([ang2ang/total_transit, ang2hap/total_transit, ang2neu/total_transit, ang2sad/total_transit])
+    h = softmax([hap2ang/total_transit, hap2hap/total_transit, hap2neu/total_transit, hap2sad/total_transit])
+    n = softmax([neu2ang/total_transit, neu2hap/total_transit, neu2neu/total_transit, neu2sad/total_transit])
+    s = softmax([sad2ang/total_transit, sad2hap/total_transit, sad2neu/total_transit, sad2sad/total_transit])
+    return {'a2a':a[0], 'a2h':a[1], 'a2n':a[2], 'a2s':a[3], \
+                    'h2a':h[0], 'h2h':h[1], 'h2n':h[2], 'h2s':h[3], \
+                    'n2a':n[0], 'n2h':n[1], 'n2n':n[2], 'n2s':n[3], \
+                    's2a':s[0], 's2h':s[1], 's2n':s[2], 's2s':s[3]}
 
 if __name__ == '__main__':
     emo_dict = joblib.load('emo_all_iemocap.pkl')
-    print(emo_trans_prob(emo_dict))
+    print('ang2ang :', emo_trans_prob(emo_dict)['a2a'])
+    print('ang2hap :', emo_trans_prob(emo_dict)['a2h'])
+    print('ang2neu :', emo_trans_prob(emo_dict)['a2n'])
+    print('ang2sad :', emo_trans_prob(emo_dict)['a2s'])
+    print('=============================================')
+    print('hap2ang :', emo_trans_prob(emo_dict)['h2a'])
+    print('hap2hap :', emo_trans_prob(emo_dict)['h2h'])
+    print('hap2neu :', emo_trans_prob(emo_dict)['h2n'])
+    print('hap2sad :', emo_trans_prob(emo_dict)['h2s'])
+    print('=============================================')
+    print('neu2ang :', emo_trans_prob(emo_dict)['n2a'])
+    print('neu2hap :', emo_trans_prob(emo_dict)['n2h'])
+    print('neu2neu :', emo_trans_prob(emo_dict)['n2n'])
+    print('neu2sad :', emo_trans_prob(emo_dict)['n2s'])   
+    print('=============================================')
+    print('sad2ang :', emo_trans_prob(emo_dict)['s2a'])
+    print('sad2hap :', emo_trans_prob(emo_dict)['s2h'])
+    print('sad2neu :', emo_trans_prob(emo_dict)['s2n'])
+    print('sad2sad :', emo_trans_prob(emo_dict)['s2s'])
+    print('=============================================')
+    total_prob = 0
+    for prob in emo_trans_prob(emo_dict).values():
+        total_prob += prob
+    print('total prob:', total_prob)
+
