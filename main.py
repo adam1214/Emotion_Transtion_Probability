@@ -6,7 +6,7 @@ def softmax(x):
     softmax_x = exp_x / np.sum(exp_x)
     return softmax_x 
 
-def emo_trans_prob(emo_dict):
+def emo_trans_prob(emo_dict, val=None):
     # only estimate anger, happiness, neutral, sadness
     total_transit = 0
 
@@ -35,6 +35,8 @@ def emo_trans_prob(emo_dict):
 
     for utt in emo_dict.keys():
         dialog_id = utt[0:-5]
+        if val and val == dialog_id[0:5]:
+            continue
 
         if emo_dict[utt] != 'ang' and emo_dict[utt] != 'hap' and emo_dict[utt] != 'neu' and emo_dict[utt] != 'sad': 
             # only estimate anger, happiness, neutral, sadness
@@ -101,30 +103,50 @@ def emo_trans_prob(emo_dict):
                     'n2a':n[0], 'n2h':n[1], 'n2n':n[2], 'n2s':n[3], \
                     's2a':s[0], 's2h':s[1], 's2n':s[2], 's2s':s[3]}
 
+def get_val_emo_trans_prob(emo_dict):
+    """Get emo_trans_prob estimated from training sessions."""
+
+    session = ['Ses01', 'Ses02', 'Ses03', 'Ses04', 'Ses05']
+    emo_trans_prob_dict = {}
+    for i in range(len(session)):
+      val = session[i]
+      train_sessions = session[:i] + session[i+1:]
+      emo_trans_prob_com = emo_trans_prob(emo_dict, val)
+      emo_trans_prob_dict[val] = emo_trans_prob_com
+
+    return emo_trans_prob_dict
+
 if __name__ == '__main__':
     emo_dict = joblib.load('emo_all_iemocap.pkl')
-    print('ang2ang :', emo_trans_prob(emo_dict)['a2a'])
-    print('ang2hap :', emo_trans_prob(emo_dict)['a2h'])
-    print('ang2neu :', emo_trans_prob(emo_dict)['a2n'])
-    print('ang2sad :', emo_trans_prob(emo_dict)['a2s'])
+    emo_trans_prob_ = emo_trans_prob(emo_dict)
+    print('ang2ang :', emo_trans_prob_['a2a'])
+    print('ang2hap :', emo_trans_prob_['a2h'])
+    print('ang2neu :', emo_trans_prob_['a2n'])
+    print('ang2sad :', emo_trans_prob_['a2s'])
     print('=============================================')
-    print('hap2ang :', emo_trans_prob(emo_dict)['h2a'])
-    print('hap2hap :', emo_trans_prob(emo_dict)['h2h'])
-    print('hap2neu :', emo_trans_prob(emo_dict)['h2n'])
-    print('hap2sad :', emo_trans_prob(emo_dict)['h2s'])
+    print('hap2ang :', emo_trans_prob_['h2a'])
+    print('hap2hap :', emo_trans_prob_['h2h'])
+    print('hap2neu :', emo_trans_prob_['h2n'])
+    print('hap2sad :', emo_trans_prob_['h2s'])
     print('=============================================')
-    print('neu2ang :', emo_trans_prob(emo_dict)['n2a'])
-    print('neu2hap :', emo_trans_prob(emo_dict)['n2h'])
-    print('neu2neu :', emo_trans_prob(emo_dict)['n2n'])
-    print('neu2sad :', emo_trans_prob(emo_dict)['n2s'])   
+    print('neu2ang :', emo_trans_prob_['n2a'])
+    print('neu2hap :', emo_trans_prob_['n2h'])
+    print('neu2neu :', emo_trans_prob_['n2n'])
+    print('neu2sad :', emo_trans_prob_['n2s'])   
     print('=============================================')
-    print('sad2ang :', emo_trans_prob(emo_dict)['s2a'])
-    print('sad2hap :', emo_trans_prob(emo_dict)['s2h'])
-    print('sad2neu :', emo_trans_prob(emo_dict)['s2n'])
-    print('sad2sad :', emo_trans_prob(emo_dict)['s2s'])
+    print('sad2ang :', emo_trans_prob_['s2a'])
+    print('sad2hap :', emo_trans_prob_['s2h'])
+    print('sad2neu :', emo_trans_prob_['s2n'])
+    print('sad2sad :', emo_trans_prob_['s2s'])
     print('=============================================')
     total_prob = 0
     for prob in emo_trans_prob(emo_dict).values():
         total_prob += prob
     print('total prob:', total_prob)
-
+    print('++++++++++++++++++++++++++++++++++++++++++++++++')
+    get_val_emo_trans_prob_ = get_val_emo_trans_prob(emo_dict)
+    print(get_val_emo_trans_prob_['Ses01'])
+    print(get_val_emo_trans_prob_['Ses02'])
+    print(get_val_emo_trans_prob_['Ses03'])
+    print(get_val_emo_trans_prob_['Ses04'])
+    print(get_val_emo_trans_prob_['Ses05'])
