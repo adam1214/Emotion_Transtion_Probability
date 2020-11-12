@@ -6,7 +6,7 @@ def softmax(x):
     softmax_x = exp_x / np.sum(exp_x)
     return softmax_x 
 
-def emo_trans_prob_need_softmax(emo_dict, dialogs, val=None):
+def emo_trans_prob_BI_need_softmax(emo_dict, dialogs, val=None):
     # only estimate anger, happiness, neutral, sadness
     total_transit = 0
 
@@ -109,7 +109,7 @@ def emo_trans_prob_need_softmax(emo_dict, dialogs, val=None):
                     'n2a':n[0], 'n2h':n[1], 'n2n':n[2], 'n2s':n[3], \
                     's2a':s[0], 's2h':s[1], 's2n':s[2], 's2s':s[3]}
 
-def emo_trans_prob_without_softmax(emo_dict, dialogs, val=None):
+def emo_trans_prob_BI_without_softmax(emo_dict, dialogs, val=None):
     # only estimate anger, happiness, neutral, sadness
     a2 = 0
     h2 = 0
@@ -251,10 +251,10 @@ def get_val_emo_trans_prob(emo_dict, dialogs, softmax_or_not):
         val = session[i]
         train_sessions = session[:i] + session[i+1:]
         if softmax_or_not == 1:
-            emo_trans_prob_com = emo_trans_prob_need_softmax(emo_dict, dialogs, val)
+            emo_trans_prob_com = emo_trans_prob_BI_need_softmax(emo_dict, dialogs, val)
             emo_trans_prob_dict[val] = emo_trans_prob_com
         elif softmax_or_not == 0:
-            emo_trans_prob_com = emo_trans_prob_without_softmax(emo_dict, dialogs, val)
+            emo_trans_prob_com = emo_trans_prob_BI_without_softmax(emo_dict, dialogs, val)
             emo_trans_prob_dict[val] = emo_trans_prob_com
     return emo_trans_prob_dict
 
@@ -263,7 +263,7 @@ if __name__ == '__main__':
     dialogs = joblib.load('dialog_iemocap.pkl')
     
     print('==========with softmax==========')
-    emo_trans_prob_need_softmax_ = emo_trans_prob_need_softmax(emo_dict, dialogs)
+    emo_trans_prob_need_softmax_ = emo_trans_prob_BI_need_softmax(emo_dict, dialogs)
     print('ang2ang :', emo_trans_prob_need_softmax_['a2a'])
     print('ang2hap :', emo_trans_prob_need_softmax_['a2h'])
     print('ang2neu :', emo_trans_prob_need_softmax_['a2n'])
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     print('sad2sad :', emo_trans_prob_need_softmax_['s2s'])
     print('=============================================')
     total_prob = 0
-    for prob in emo_trans_prob_need_softmax(emo_dict, dialogs).values():
+    for prob in emo_trans_prob_BI_need_softmax(emo_dict, dialogs).values():
         total_prob += prob
     print('total prob:', total_prob)
     print('++++++++++++++++++++++++++++++++++++++++++++++++')
@@ -295,9 +295,9 @@ if __name__ == '__main__':
     print(get_val_emo_trans_prob_['Ses03'])
     print(get_val_emo_trans_prob_['Ses04'])
     print(get_val_emo_trans_prob_['Ses05'])
-    '''
+    
     print('==========without softmax==========')
-    emo_trans_prob_without_softmax_ = emo_trans_prob_without_softmax(emo_dict, dialogs)
+    emo_trans_prob_without_softmax_ = emo_trans_prob_BI_without_softmax(emo_dict, dialogs)
     print('ang2ang :', emo_trans_prob_without_softmax_['a2a'])
     print('ang2hap :', emo_trans_prob_without_softmax_['a2h'])
     print('ang2neu :', emo_trans_prob_without_softmax_['a2n'])
@@ -328,4 +328,3 @@ if __name__ == '__main__':
     print(get_val_emo_trans_prob_['Ses03'])
     print(get_val_emo_trans_prob_['Ses04'])
     print(get_val_emo_trans_prob_['Ses05'])
-    '''
