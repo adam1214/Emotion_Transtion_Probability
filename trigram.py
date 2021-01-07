@@ -844,7 +844,7 @@ def emo_trans_prob_TRI_without_softmax(emo_dict, dialogs, add_one_smooth_or_not,
             pre_emo = emo_dict[utt]
 
     if add_one_smooth_or_not == 1:
-        a_a += 3
+        a_a += 4
         a_h += 4
         a_n += 4
         a_s += 4
@@ -977,29 +977,25 @@ def get_val_emo_trans_prob(emo_dict, dialogs, softmax_or_not):
         val = session[i]
         train_sessions = session[:i] + session[i+1:]
         if softmax_or_not == 1:
-            emo_trans_prob_com = emo_trans_prob_TRI_need_softmax(emo_dict, dialogs, 1, val)
+            emo_trans_prob_com = emo_trans_prob_TRI_need_softmax(emo_dict, dialogs, 0, val)
             emo_trans_prob_dict[val] = emo_trans_prob_com
         elif softmax_or_not == 0:
-            emo_trans_prob_com = emo_trans_prob_TRI_without_softmax(emo_dict, dialogs, 0, val)
+            emo_trans_prob_com = emo_trans_prob_TRI_without_softmax(emo_dict, dialogs, 1, val)
             emo_trans_prob_dict[val] = emo_trans_prob_com
     return emo_trans_prob_dict
 
 if __name__ == '__main__':
-    emo_dict = joblib.load('emo_all_iemocap.pkl')
-    dialogs = joblib.load('dialog_iemocap.pkl')
-    '''
+    #emo_dict = joblib.load('data/emo_all_iemocap.pkl')
+    #emo_dict = joblib.load('data/C2C_4emo_all_iemmcap.pkl')
+    emo_dict = joblib.load('data/U2U_4emo_all_iemmcap.pkl')
+    dialogs = joblib.load('data/dialog_iemocap.pkl')
+
     print('==========with softmax==========')
-    emo_trans_prob_need_softmax_ = emo_trans_prob_TRI_need_softmax(emo_dict, dialogs, 1)
+    emo_trans_prob_need_softmax_ = emo_trans_prob_TRI_need_softmax(emo_dict, dialogs, 0)
     get_val_emo_trans_prob_ = get_val_emo_trans_prob(emo_dict, dialogs, 1)
 
-    print(get_val_emo_trans_prob_)
-    print(get_val_emo_trans_prob_['Ses01'])
-    print(get_val_emo_trans_prob_['Ses02'])
-    print(get_val_emo_trans_prob_['Ses03'])
-    print(get_val_emo_trans_prob_['Ses04'])
-    print(get_val_emo_trans_prob_['Ses05'])
     '''
-
     print('==========without softmax==========')
-    emo_trans_prob_without_softmax_ = emo_trans_prob_TRI_without_softmax(emo_dict, dialogs, 0)
+    emo_trans_prob_without_softmax_ = emo_trans_prob_TRI_without_softmax(emo_dict, dialogs, 1)
     get_val_emo_trans_prob_ = get_val_emo_trans_prob(emo_dict, dialogs, 0)
+    '''

@@ -120,9 +120,9 @@ def emo_trans_prob_BI_need_softmax(emo_dict, dialogs, val=None):
     n = softmax([neu2ang/total_transit, neu2hap/total_transit, neu2neu/total_transit, neu2sad/total_transit])
     s = softmax([sad2ang/total_transit, sad2hap/total_transit, sad2neu/total_transit, sad2sad/total_transit])
     return {'a2a':a[0], 'a2h':a[1], 'a2n':a[2], 'a2s':a[3], \
-                    'h2a':h[0], 'h2h':h[1], 'h2n':h[2], 'h2s':h[3], \
-                    'n2a':n[0], 'n2h':n[1], 'n2n':n[2], 'n2s':n[3], \
-                    's2a':s[0], 's2h':s[1], 's2n':s[2], 's2s':s[3]}
+            'h2a':h[0], 'h2h':h[1], 'h2n':h[2], 'h2s':h[3], \
+            'n2a':n[0], 'n2h':n[1], 'n2n':n[2], 'n2s':n[3], \
+            's2a':s[0], 's2h':s[1], 's2n':s[2], 's2s':s[3]}
 
 def emo_trans_prob_BI_without_softmax(emo_dict, dialogs, val=None):
     # only estimate anger, happiness, neutral, sadness
@@ -297,52 +297,15 @@ def get_val_emo_trans_prob(emo_dict, dialogs, softmax_or_not):
     return emo_trans_prob_dict
 
 if __name__ == '__main__':
-    emo_dict = joblib.load('emo_all_iemocap.pkl')
-    dialogs = joblib.load('dialog_iemocap.pkl')
+    #emo_dict = joblib.load('data/emo_all_iemocap.pkl')
+    #emo_dict = joblib.load('data/C2C_4emo_all_iemmcap.pkl')
+    emo_dict = joblib.load('data/U2U_4emo_all_iemmcap.pkl')
+    dialogs = joblib.load('data/dialog_iemocap.pkl')
     '''
     print('==========with softmax==========')
     emo_trans_prob_need_softmax_ = emo_trans_prob_BI_need_softmax(emo_dict, dialogs)
-
     get_val_emo_trans_prob_ = get_val_emo_trans_prob(emo_dict, dialogs, 1)
-    print(get_val_emo_trans_prob_['Ses01'])
-    print(get_val_emo_trans_prob_['Ses02'])
-    print(get_val_emo_trans_prob_['Ses03'])
-    print(get_val_emo_trans_prob_['Ses04'])
-    print(get_val_emo_trans_prob_['Ses05'])
     '''
     print('==========without softmax==========')
     emo_trans_prob_without_softmax_ = emo_trans_prob_BI_without_softmax(emo_dict, dialogs)
-    '''
-    print('ang2ang :', emo_trans_prob_without_softmax_['a2a'])
-    print('ang2hap :', emo_trans_prob_without_softmax_['a2h'])
-    print('ang2neu :', emo_trans_prob_without_softmax_['a2n'])
-    print('ang2sad :', emo_trans_prob_without_softmax_['a2s'])
-    print(emo_trans_prob_without_softmax_['a2a']+emo_trans_prob_without_softmax_['a2h']+emo_trans_prob_without_softmax_['a2n']+emo_trans_prob_without_softmax_['a2s'])
-    print('=============================================')
-    print('hap2ang :', emo_trans_prob_without_softmax_['h2a'])
-    print('hap2hap :', emo_trans_prob_without_softmax_['h2h'])
-    print('hap2neu :', emo_trans_prob_without_softmax_['h2n'])
-    print('hap2sad :', emo_trans_prob_without_softmax_['h2s'])
-    print(emo_trans_prob_without_softmax_['h2a']+emo_trans_prob_without_softmax_['h2h']+emo_trans_prob_without_softmax_['h2n']+emo_trans_prob_without_softmax_['h2s'])
-    print('=============================================')
-    print('neu2ang :', emo_trans_prob_without_softmax_['n2a'])
-    print('neu2hap :', emo_trans_prob_without_softmax_['n2h'])
-    print('neu2neu :', emo_trans_prob_without_softmax_['n2n'])
-    print('neu2sad :', emo_trans_prob_without_softmax_['n2s'])   
-    print(emo_trans_prob_without_softmax_['n2a']+emo_trans_prob_without_softmax_['n2h']+emo_trans_prob_without_softmax_['n2n']+emo_trans_prob_without_softmax_['n2s'])
-    print('=============================================')
-    print('sad2ang :', emo_trans_prob_without_softmax_['s2a'])
-    print('sad2hap :', emo_trans_prob_without_softmax_['s2h'])
-    print('sad2neu :', emo_trans_prob_without_softmax_['s2n'])
-    print('sad2sad :', emo_trans_prob_without_softmax_['s2s'])
-    print(emo_trans_prob_without_softmax_['s2a']+emo_trans_prob_without_softmax_['s2h']+emo_trans_prob_without_softmax_['s2n']+emo_trans_prob_without_softmax_['s2s'])
-    print('=============================================')
-    '''
     get_val_emo_trans_prob_ = get_val_emo_trans_prob(emo_dict, dialogs, 0)
-    '''
-    print(get_val_emo_trans_prob_['Ses01'])
-    print(get_val_emo_trans_prob_['Ses02'])
-    print(get_val_emo_trans_prob_['Ses03'])
-    print(get_val_emo_trans_prob_['Ses04'])
-    print(get_val_emo_trans_prob_['Ses05'])
-    '''
